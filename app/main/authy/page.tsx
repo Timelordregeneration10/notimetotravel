@@ -49,7 +49,7 @@ export default function App() {
     console.log(isAdmin, userInfo);
     if (userInfo) {
       if (!isAdmin) {
-        router.push("/main");
+        router.push("/notimetotravel/main");
       }
     }
   }, [userInfo]);

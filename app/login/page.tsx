@@ -39,7 +39,7 @@ const Login = () => {
                 })
               );
               localStorage.setItem("xcAuthorization", res.data.token);
-              router.push("/main");
+              router.push("/notimetotravel/main");
             } else {
               error("登录失败！");
               if (res.data.status === 401) {

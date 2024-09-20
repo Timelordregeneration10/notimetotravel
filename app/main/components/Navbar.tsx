@@ -37,8 +37,8 @@ const NavBar = ({ className }: { className: string }) => {
   const isAdmin = userInfo?.permission === "admin";
 
   const navItems: Array<{ name: string; href: string; disabled: boolean }> = [
-    { name: "审核", href: "/main/check", disabled: false },
-    { name: "管理", href: "/main/authy", disabled: !isAdmin },
+    { name: "审核", href: "/notimetotravel/main/check", disabled: false },
+    { name: "管理", href: "/notimetotravel/main/authy", disabled: !isAdmin },
   ];
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -78,7 +78,7 @@ const NavBar = ({ className }: { className: string }) => {
     } else {
       return (
         <div className="flex items-center justify-center">
-          <Link href="/auth#signup">
+          <Link href="/notimetotravel/auth#signup">
             <Button
               color="primary"
               size="sm"
@@ -89,7 +89,7 @@ const NavBar = ({ className }: { className: string }) => {
             </Button>
           </Link>
 
-          <Link href="/auth">
+          <Link href="/notimetotravel/auth">
             <Button
               color="primary"
               radius="sm"
@@ -150,7 +150,7 @@ const NavBar = ({ className }: { className: string }) => {
       >
         {/* desktop show */}
         <NavbarBrand>
-          <Link href="/main" className="text-[#91bef0]" size="lg">
+          <Link href="/notimetotravel/main" className="text-[#91bef0]" size="lg">
             旅行物语
           </Link>
         </NavbarBrand>
@@ -184,7 +184,7 @@ const NavBar = ({ className }: { className: string }) => {
 
         <NavbarContent justify="end">
           <NavbarItem className="flex items-center justify-center">
-            <Link href="/main/profile">
+            <Link href="/notimetotravel/main/profile">
               <Image src={ProfileSVG} alt="Profile" width={32} height={32} />
             </Link>
           </NavbarItem>
