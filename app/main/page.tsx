@@ -1,10 +1,15 @@
 "use client";
+import { useEffect } from "react";
 import useUserInfo from "../hooks/useUserInfo";
 import { Link } from "@nextui-org/react";
 
 const Main = () => {
   const userInfo = useUserInfo();
   const isAdmin = userInfo?.permission === "admin";
+
+  useEffect(() => {
+    alert("当前为测试环境，仅作展示，未连接后端！");
+  }, []);
 
   return (
     <div className="flex flex-col gap-10 h-[80vh] w-full justify-center items-center">

@@ -92,15 +92,17 @@ export default function App() {
     // console.log(userInfo);
   }, [userInfo]);
 
-  const [notes, setNotes] = React.useState<Array<{
-    noteId: number;
-    title: string;
-    coverImg: string;
-    authorNickname: string;
-    authorAvatar: string;
-    status: "waiting" | "approved" | "disapproved" | "delete";
-    uploadTime: string; //TODO:questioned
-  }>>([]);
+  const [notes, setNotes] = React.useState<
+    Array<{
+      noteId: number;
+      title: string;
+      coverImg: string;
+      authorNickname: string;
+      authorAvatar: string;
+      status: "waiting" | "approved" | "disapproved" | "delete";
+      uploadTime: string; //TODO:questioned
+    }>
+  >([]);
 
   const refreshNotes = () => {
     if (process.env.NEXT_PUBLIC_TEST === "test") {
@@ -336,7 +338,7 @@ export default function App() {
                 error("获取游记列表失败！");
                 if (res.data.status === 401) {
                   console.log(res.data?.msg);
-                  if (res.data?.msg === 'Authentication expires.') {
+                  if (res.data?.msg === "Authentication expires.") {
                     error("登录已过期，请重新登录！");
                     if (process.env.NEXT_PUBLIC_TEST !== "test") {
                       localStorage.removeItem("xcuserInfo");
@@ -357,7 +359,7 @@ export default function App() {
         error("Get Note List Error: " + err);
       }
     }
-  }
+  };
 
   useEffect(() => {
     console.log("refresh notes");
@@ -412,11 +414,12 @@ export default function App() {
     if (hasSearchFilter) {
       filteredNotes = filteredNotes.filter((note) => {
         if (isSearchName)
-          return note.authorNickname.toLowerCase().includes(filterValue.toLowerCase())
+          return note.authorNickname
+            .toLowerCase()
+            .includes(filterValue.toLowerCase());
         else
-          return note.title.toLowerCase().includes(filterValue.toLowerCase())
-      }
-      );
+          return note.title.toLowerCase().includes(filterValue.toLowerCase());
+      });
     }
     if (
       statusFilter !== "all" &&
@@ -491,6 +494,13 @@ export default function App() {
   });
   const handleViewDetails = (id: number) => {
     // console.log(id);
+    if (process.env.NEXT_PUBLIC_TEST === "test") {
+      success("获取游记详情成功");
+      setShowDetails(true);
+      // axios get details
+      onDetailsOpen();
+      return;
+    }
     try {
       API.CheckServiceApi.getNoteInfo(id)
         .then((res) => {
@@ -504,7 +514,7 @@ export default function App() {
               error("获取游记详情失败！");
               if (res.data.status === 401) {
                 console.log(res.data?.msg);
-                if (res.data?.msg === 'Authentication expires.') {
+                if (res.data?.msg === "Authentication expires.") {
                   error("登录已过期，请重新登录！");
                   if (process.env.NEXT_PUBLIC_TEST !== "test") {
                     localStorage.removeItem("xcuserInfo");
@@ -532,11 +542,21 @@ export default function App() {
   const [modalHeader, setModalHeader] = React.useState("");
   const [modalContent, setModalContent] = React.useState(false);
   const [modalOkOption, setModalOkOption] = React.useState<{
-    action: 'approve' | 'disapprove' | 'delete'; cn: string; en: string;
-  }>({ action: 'approve', cn: '通过游记', en: 'Approve Diary' });
+    action: "approve" | "disapprove" | "delete";
+    cn: string;
+    en: string;
+  }>({ action: "approve", cn: "通过游记", en: "Approve Diary" });
   const [disapproveReason, setDisapproveReason] = React.useState("");
 
-  const handleCheckDiary = (action: 'approve' | 'disapprove' | 'delete', cn: string, en: string) => {
+  const handleCheckDiary = (
+    action: "approve" | "disapprove" | "delete",
+    cn: string,
+    en: string
+  ) => {
+    if (process.env.NEXT_PUBLIC_TEST === "test") {
+      success(`${cn}成功`);
+      return;
+    }
     try {
       API.CheckServiceApi.approveNote({
         noteId: arraySelected,
@@ -551,7 +571,7 @@ export default function App() {
               error(`${cn}失败！`);
               if (res.data.status === 401) {
                 console.log(res.data?.msg);
-                if (res.data?.msg === 'Authentication expires.') {
+                if (res.data?.msg === "Authentication expires.") {
                   error("登录已过期，请重新登录！");
                   if (process.env.NEXT_PUBLIC_TEST !== "test") {
                     localStorage.removeItem("xcuserInfo");
@@ -573,35 +593,43 @@ export default function App() {
     } finally {
       refreshNotes();
     }
-  }
+  };
 
   const handlePass = () => {
     setShowChangeStatus(true);
     setModalHeader("通过游记");
     setModalContent(false);
-    setModalOkOption({ action: 'approve', cn: '通过游记', en: 'Approve Diary' });
+    setModalOkOption({
+      action: "approve",
+      cn: "通过游记",
+      en: "Approve Diary",
+    });
     setDisapproveReason("");
     onChangeStatusOpen();
-  }
+  };
 
   const handleReject = () => {
     setShowChangeStatus(true);
     setModalHeader("不通过游记");
     setModalContent(true);
-    setModalOkOption({ action: 'disapprove', cn: '不通过游记', en: 'Disapprove Diary' });
+    setModalOkOption({
+      action: "disapprove",
+      cn: "不通过游记",
+      en: "Disapprove Diary",
+    });
     setDisapproveReason("");
     onChangeStatusOpen();
-  }
+  };
 
   const handleDelete = () => {
     setShowChangeStatus(true);
     setModalHeader("删除游记");
     setModalContent(false);
-    setModalOkOption({ action: 'delete', cn: '删除游记', en: 'Delete Diary' });
+    setModalOkOption({ action: "delete", cn: "删除游记", en: "Delete Diary" });
     setDisapproveReason("");
     // axios get details
     onChangeStatusOpen();
-  }
+  };
 
   const handlePassDiary = (id: number) => {
     setArraySelected([id]);
@@ -613,7 +641,7 @@ export default function App() {
     setArraySelected([id]);
     console.log(id);
     handleReject();
-  }
+  };
 
   const handleDeleteDiary = (id: number) => {
     setArraySelected([id]);
@@ -669,103 +697,107 @@ export default function App() {
     handleDelete();
   };
 
-  const renderCell = React.useCallback((note: noteType, columnKey: Key, isAdmin: boolean) => {
-    // console.log(isAdmin);
-    const cellValue = note[columnKey as keyof typeof note];
+  const renderCell = React.useCallback(
+    (note: noteType, columnKey: Key, isAdmin: boolean) => {
+      // console.log(isAdmin);
+      const cellValue = note[columnKey as keyof typeof note];
 
-    switch (columnKey) {
-      case "authorNickname":
-        return (
-          <p className="text-bold text-blue-500 text-md capitalize flex items-center gap-2 min-w-[150px]">
-            <Image
-              width={50}
-              height={50}
-              alt="avatar"
-              src={note.authorAvatar}
-              className="w-[50px] h-[50px]"
-            ></Image>
-            {cellValue}
-          </p>
-        );
-      case "title":
-        return (
-          <p className="text-bold text-blue-500 text-md capitalize flex items-center gap-2 min-w-[150px]">
-            <Image
-              width={50}
-              height={50}
-              alt="avatar"
-              src={note.coverImg}
-              className="w-[50px] h-[50px]"
-            ></Image>
-            {cellValue}
-          </p>
-        );
-      case "status":
-        return (
-          <Chip
-            className="capitalize"
-            color={
-              statusColorMap[note.status as keyof typeof statusColorMap] ===
+      switch (columnKey) {
+        case "authorNickname":
+          return (
+            <p className="text-bold text-blue-500 text-md capitalize flex items-center gap-2 min-w-[150px]">
+              <Image
+                width={50}
+                height={50}
+                alt="avatar"
+                src={note.authorAvatar}
+                className="w-[50px] h-[50px]"
+              ></Image>
+              {cellValue}
+            </p>
+          );
+        case "title":
+          return (
+            <p className="text-bold text-blue-500 text-md capitalize flex items-center gap-2 min-w-[150px]">
+              <Image
+                width={50}
+                height={50}
+                alt="avatar"
+                src={note.coverImg}
+                className="w-[50px] h-[50px]"
+              ></Image>
+              {cellValue}
+            </p>
+          );
+        case "status":
+          return (
+            <Chip
+              className="capitalize"
+              color={
+                statusColorMap[note.status as keyof typeof statusColorMap] ===
                 "success"
-                ? "success"
-                : statusColorMap[note.status as keyof typeof statusColorMap] ===
-                  "danger"
+                  ? "success"
+                  : statusColorMap[
+                      note.status as keyof typeof statusColorMap
+                    ] === "danger"
                   ? "danger"
                   : "primary"
-            }
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-3">
-            <Tooltip content="游记详情">
-              <span
-                className="text-lg text-default-400 cursor-pointer active:opacity-50"
-                onClick={() => {
-                  handleViewDetails(note.noteId);
-                }}
-              >
-                <EyeIcon />
-              </span>
-            </Tooltip>
-            <Tooltip color="success" content="通过游记">
-              <span
-                className="text-2xl text-success cursor-pointer active:opacity-50"
-                onClick={() => handlePassDiary(note.noteId)}
-              >
-                +
-              </span>
-            </Tooltip>
-            <Tooltip color="danger" content="不通过游记">
-              <span
-                className="text-2xl text-danger cursor-pointer active:opacity-50"
-                onClick={() => handleRejectDiary(note.noteId)}
-              >
-                -
-              </span>
-            </Tooltip>
-            {isAdmin && (
-              <Tooltip color="danger" content="删除游记">
+              }
+              size="sm"
+              variant="flat"
+            >
+              {cellValue}
+            </Chip>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-3">
+              <Tooltip content="游记详情">
                 <span
-                  className="text-lg text-danger cursor-pointer active:opacity-50"
+                  className="text-lg text-default-400 cursor-pointer active:opacity-50"
                   onClick={() => {
-                    handleDeleteDiary(note.noteId);
+                    handleViewDetails(note.noteId);
                   }}
                 >
-                  <DeleteIcon />
+                  <EyeIcon />
                 </span>
               </Tooltip>
-            )}
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, [isAdmin]);
+              <Tooltip color="success" content="通过游记">
+                <span
+                  className="text-2xl text-success cursor-pointer active:opacity-50"
+                  onClick={() => handlePassDiary(note.noteId)}
+                >
+                  +
+                </span>
+              </Tooltip>
+              <Tooltip color="danger" content="不通过游记">
+                <span
+                  className="text-2xl text-danger cursor-pointer active:opacity-50"
+                  onClick={() => handleRejectDiary(note.noteId)}
+                >
+                  -
+                </span>
+              </Tooltip>
+              {isAdmin && (
+                <Tooltip color="danger" content="删除游记">
+                  <span
+                    className="text-lg text-danger cursor-pointer active:opacity-50"
+                    onClick={() => {
+                      handleDeleteDiary(note.noteId);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </span>
+                </Tooltip>
+              )}
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [isAdmin]
+  );
 
   const onNextPage = React.useCallback(() => {
     if (page < pages) {
@@ -824,7 +856,9 @@ export default function App() {
               >
                 SearchBy:
               </Switch>
-              <span className="text-small">{isSearchName ? "name" : "title"}</span>
+              <span className="text-small">
+                {isSearchName ? "name" : "title"}
+              </span>
             </div>
           </div>
           <div className="flex gap-3">
@@ -931,7 +965,7 @@ export default function App() {
           <div className="w-[30%] flex items-center gap-4">
             <span className=" text-small text-default-400">
               {selectedKeys.size >= filteredItems.length ||
-                `${selectedKeys}` == "all"
+              `${selectedKeys}` == "all"
                 ? "All items selected"
                 : `${selectedKeys.size} of ${filteredItems.length} selected`}
             </span>
@@ -1074,11 +1108,12 @@ export default function App() {
                               alt="img"
                             />
                           )}
-                          {
-                            resource.mediaType === "video" && (
-                              <video src={resource.url} className="w-[50px] h-[50px]"></video>
-                            )
-                          }
+                          {resource.mediaType === "video" && (
+                            <video
+                              src={resource.url}
+                              className="w-[50px] h-[50px]"
+                            ></video>
+                          )}
                         </>
                       );
                     })}
@@ -1109,7 +1144,14 @@ export default function App() {
                 <ModalBody>
                   {modalContent && (
                     <div>
-                      <Input isClearable type="textarea" placeholder="请输入不通过原因" onChange={(e) => { setDisapproveReason(e.target.value) }}></Input>
+                      <Input
+                        isClearable
+                        type="textarea"
+                        placeholder="请输入不通过原因"
+                        onChange={(e) => {
+                          setDisapproveReason(e.target.value);
+                        }}
+                      ></Input>
                     </div>
                   )}
                 </ModalBody>
@@ -1121,7 +1163,11 @@ export default function App() {
                     color="primary"
                     variant="ghost"
                     onPress={() => {
-                      handleCheckDiary(modalOkOption.action, modalOkOption.cn, modalOkOption.en);
+                      handleCheckDiary(
+                        modalOkOption.action,
+                        modalOkOption.cn,
+                        modalOkOption.en
+                      );
                       onClose();
                     }}
                   >

@@ -15,7 +15,7 @@ async function logoutClicked() {
     localStorage.removeItem("xcuserInfo");
     localStorage.removeItem("xcAuthorization");
   }
-  window.location.href = "/";
+  window.location.href = "https://timelordregeneration10.github.io/notimetotravel/";
 }
 
 export { logoutClicked, signInClicked };

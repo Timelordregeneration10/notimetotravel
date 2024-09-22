@@ -204,6 +204,10 @@ export default function App() {
       console.log("Username or password is empty.");
       return;
     }
+    if(process.env.NEXT_PUBLIC_TEST === "test") {
+      success("增加审核人员列表成功");
+      return;
+    }
 
     try {
       API.AuthyServiceApi.registerReviewer({
@@ -269,6 +273,10 @@ export default function App() {
   };
 
   const handleDelete = () => {
+    if(process.env.NEXT_PUBLIC_TEST === "test") {
+      success("删除审核人员列表成功");
+      return
+    }
     try {
       API.AuthyServiceApi.deleteReviewer({ reviewerId: arraySelected })
         .then((res) => {
